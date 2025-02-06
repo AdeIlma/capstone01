@@ -7,8 +7,8 @@ data = [
 ]
 
 # Fungsi untuk validasi nama (hanya huruf)
-def validasi_alpabet(alpabet):
-    return alpabet.isalpha()
+def validasi_alfabet(alfabet):
+    return alfabet.isalpha()
 
 # Fungsi untuk validasi usia (harus angka)
 def validasi_angka(angka):
@@ -23,7 +23,7 @@ def create_data():
         kota = input('Masukkan Asal: ')
 
         # Cek apakah input valid
-        if validasi_angka(kode) and validasi_alpabet(nama) and validasi_angka(usia) and validasi_alpabet(kota):
+        if validasi_angka(kode) and validasi_alfabet(nama) and validasi_angka(usia) and validasi_alfabet(kota):
             data.append({'Kode': int(kode), 'Nama': nama, 'Usia': int(usia), 'Kota': kota})  # Tambahkan ke list
             print(f"\nData Berhasil Ditambahkan!")
             print(f"Kode: {kode}, Nama: {nama}, Usia: {usia}, Kota: {kota}")
@@ -37,44 +37,50 @@ def read_data():
 
 # untuk melakukan update data 
 def update_data():
-   while True:
+    while True:
         try:
+            # Meminta input kode yang ingin diupdate
             kode_update = input('Masukkan Kode data yang ingin di update (0 untuk keluar): ')
             validasi_angka(kode_update)
             kode_update = int(kode_update)
 
             if kode_update == 0:
                 print("Update dibatalkan.")
-                break
+                break  # Keluar dari loop utama jika user memilih keluar
 
-            # mencari data yang ingin di update
+            # Periksa apakah kode ada dalam data
             for item in data:
-              if item['Kode'] == kode_update:
-                while True:
-                    update = input('Masukkan data yang ingin di update (Kode/Nama/Usia/Kota): ').strip().lower()
-                    if update == 'nama':
-                        item["Nama"] = input('Masukkan Nama baru: ').strip().title()
-                        validasi_alpabet(item["Nama"])
-                    elif update == 'usia':
-                        item["Usia"] = input('Masukkan Usia baru: ')
-                        validasi_angka(item["Usia"])
-                    elif update == 'kota':
-                        item["Kota"] = input('Masukkan Kota baru: ').strip().title()
-                        validasi_alpabet(item["Kota"])
-                    else:
-                        print("Pilihan tidak valid. Silakan coba lagi.")
-                        continue
+                if item['Kode'] == kode_update:
+                    while True:  # Loop untuk update beberapa kali sebelum kembali ke input kode baru
+                        update = input('Masukkan data yang ingin di update (Kode/Nama/Usia/Kota): ').strip().lower()
+                        if update == 'nama':
+                            item["Nama"] = input('Masukkan Nama baru: ').strip().title()
+                            validasi_alfabet(item["Nama"])  
+                        elif update == 'usia':
+                            item["Usia"] = input('Masukkan Usia baru: ')
+                            validasi_angka(item["Usia"])
+                        elif update == 'kota':
+                            item["Kota"] = input('Masukkan Kota baru: ').strip().title()
+                            validasi_alfabet(item["Kota"])
+                        else:
+                            print("Pilihan tidak valid. Silakan coba lagi.")
+                            continue  # Kembali ke input update jika salah
+                        
+                        # Tanya apakah ingin update lagi
+                        update_lagi = input("Apakah ingin update data lain? (ya/tidak): ").strip().lower()
+                        if update_lagi == 'ya':
+                            break  # Kembali ke input kode_update
+                        else:
+                            print("\nData Berhasil Diupdate!")
+                            return  # Keluar dari fungsi update_data
 
-                    print(f"\nData Berhasil Diupdate!")
-                    return
-
-            # Jika kode tidak ditemukan
             else:
-              print("Data tidak ditemukan. Silakan coba lagi.")
+                print("Data tidak ditemukan. Silakan coba lagi.")
+                continue  # Kembali ke input kode jika kode tidak ditemukan
 
         except ValueError:
             print("Kode harus berupa angka.")
-            return
+            continue  # Kembali ke input kode jika input tidak valid
 
 #untuk menghapus data yang diinginkan
 def delete_data():
@@ -107,13 +113,13 @@ def delete_data():
 
 def main():
   while True:
-    pilihan = input("Pilih menu (1/2/3/4/5): ")
     print("\nMenu:")
     print("1. Tambah Data")
     print("2. Baca Data")
     print("3. Update Data")
     print("4. Hapus Data")
     print("5. Keluar")
+    pilihan = input("Pilih menu (1/2/3/4/5): ")
 
     if pilihan == '1':
       create_data()

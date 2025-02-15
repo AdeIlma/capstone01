@@ -37,32 +37,24 @@ def random_id():
             return new_id  #Jika unik, kembalikan ID dan keluar dari loop
 
 # Fungsi untuk validasi variabel2 yang menggunakan huruf
-# function validasi input
-        
+# function validasi input alfabet 
 def validasi_input_alfabet(prompt):
     while True:
         inputan = input(prompt)
-        if inputan.replace(" ","").isalpha():
+        if inputan.replace(" ","").isalpha(): #replace untuk mengubah dan isalpha untuk memvalidasi huruf agar tidak ada angka
             return inputan
         else:
             print('inputan harus huruf')
 
-def validasi_input_angka(prompt, batas_maks=10**9):
+# function validasi input huruf
+def validasi_input_angka(prompt):
     while True:
-        inputan = input(prompt).strip()
-
-        # Cek apakah angka valid dan tidak kosong
+        inputan = input(prompt).strip() #fungsi strip agar menghilangkan strip 
+        if inputan == '0':
+            return None  # Mengembalikan None untuk menandakan pembatalan
         if inputan.isdigit():
-            angka = int(inputan)
-
-            # Batas angka maksimum agar tidak terlalu besar
-            if angka > batas_maks:
-                print(f"Angka terlalu besar! Maksimum: {batas_maks:,}")
-                continue  # Minta input ulang
-
-            return angka  # Kembalikan angka jika valid
-        else:
-            print("Input harus berupa angka positif!")
+            return int(inputan)
+        print("Input harus berupa angka positif!")
 
 def validasi_input_tipe(prompt):
   while True:
@@ -76,9 +68,7 @@ def input_data(prompt):
     while True:
         inputan = input(prompt).strip().lower()
         if inputan in ['ya', 'tidak']:
-          if inputan == 'tidak':
-                print("Update selesai!")
-          return inputan  # Pastikan selalu ada return
+            return inputan  # Langsung return tanpa mencetak "Update selesai!"
         print('Inputan harus "ya" atau "tidak". Silakan coba lagi.')
 
 def login(): #fungsi login admin dan user
@@ -114,7 +104,7 @@ def tampilkan_barang(barang):
 def menambahkan_data(barang):
         id = random_id() #menggunakan fungsi random_id agar id untuk fungsi menambahkan data
         nama_barang = input('Masukkan nama barang: ').title() #input data title digunakan agar huruf kapital didepan kata
-        tipe = validasi_input_tipe('Masukkan tipe barang: ').title()
+        tipe = validasi_input_tipe('Masukkan tipe barang (smartphone/tablet/laptop): ').title()
         merek = validasi_input_alfabet('Masukkan merek barang: ').title()
         stock = validasi_input_angka('Masukkan stok: ')
         harga = validasi_input_angka('Masukkan harga: ')
@@ -122,27 +112,50 @@ def menambahkan_data(barang):
         print(f"\nData berhasil ditambahkan!")
         return tampilkan_barang(barang)
 
-# Fungsi untuk mengubah data, variabel akun_login ini agar yang dapat mengakses hanya admin
+def hapus_data(barang):
+    global data_hapus
+    while True:
+        tampilkan_barang(barang)
+        id_hapus = validasi_input_angka('Masukkan ID data yang ingin dihapus (0 untuk keluar): ')
+        if id_hapus is None:  # Handle pembatalan
+            return
+        id_hapus = int(id_hapus)  # Konversi ke integer 
+        
+        for item in barang:
+            if item['ID'] == id_hapus:
+              konfirmasi = input_data("Apakah Anda yakin ingin menghapus data ini? (ya/tidak): ")
+              if konfirmasi.lower() != "ya":
+                  continue
+              data_hapus.append(item)
+              barang.remove(item)
+              print("\nData Berhasil Dihapus!")
+              break
+        else:
+            print("Data tidak ditemukan. Silakan coba lagi.")
+            continue
+
+        lanjut = input_data("Apakah ingin menghapus barang lain? (ya/tidak): ")
+        if lanjut.lower() == "tidak":
+            break
+
 def mengubah_data(barang):
     while True:
         tampilkan_barang(barang)
-
         id_update = validasi_input_angka('Masukkan ID produk yang ingin diupdate (0 untuk keluar): ')
-        if id_update == 0:
-            print("Update dibatalkan.")
-            return  # Keluar dari fungsi
-        
+        if id_update is None:
+            return
+
         # Cari barang berdasarkan ID
         produk_ditemukan = None
         for item in barang:
-            if item['ID'] == id_update:
+            if item['ID'] == int(id_update):
                 produk_ditemukan = item
                 break
         
         if produk_ditemukan is None:
             print("ID tidak ditemukan. Silakan coba lagi.")
-            continue  # Kembali ke input ID jika tidak ditemukan
-        
+            continue
+
         while True:
             print("\n=== Pilih Data yang Ingin Diperbarui ===")
             print("1. Nama Barang")
@@ -153,81 +166,64 @@ def mengubah_data(barang):
             print("0. Selesai")
 
             pilihan = validasi_input_angka("Masukkan pilihan: ")
-            if pilihan == 1:
-                produk_ditemukan["Nama Barang"] = input('Masukkan Nama Barang baru: ').strip().title()
-            elif pilihan == 2:
-                produk_ditemukan["Tipe"] = validasi_input_tipe('Masukkan Tipe baru (Smartphone/Tablet/Laptop): ').strip().title()
-            elif pilihan == 3:
-                produk_ditemukan["Merek"] = validasi_input_alfabet('Masukkan Merek baru: ').strip().title()
-            elif pilihan == 4:
-                produk_ditemukan["Stock"] = validasi_input_angka('Masukkan Stock baru: ')
-            elif pilihan == 5:
-                produk_ditemukan["Harga"] = validasi_input_angka('Masukkan Harga baru: ')
-            elif pilihan == 0:
-                print("Update selesai!")
-                return
-            else:
-                print("Pilihan tidak valid. Silakan coba lagi.")
-
-            print("Data berhasil diperbarui!")
-
-            # Tanya apakah ingin update bagian lain
-            lanjut = input_data("Apakah ingin mengubah produk lain? (ya/tidak): ").strip().lower()
-
-#untuk menghapus data yang diinginkan
-def hapus_data(barang):
-    tampilkan_barang(barang)
-    global data_hapus
-    while True:
-        id_hapus = validasi_input_angka('Masukkan ID data yang ingin dihapus (0 untuk keluar): ')
-
-        if id_hapus == 0:
-            print("Delete dibatalkan.")
-            break
-        for item in barang:
-            if item['ID'] == id_hapus:
-                data_hapus.append(item)
-                barang.remove(item)
-                print("\nData Berhasil Dihapus!")
+            if pilihan is None or pilihan == 0:
                 break
-        else:
-            print("Data tidak ditemukan. Silakan coba lagi.")
-            continue  # Jika data tidak ditemukan, kembali ke awal loop untuk input ID lagi
+            update_berhasil = True
+            match int(pilihan): #match case ini cocok untuk kondisi yang tetap 
+                case 1:
+                    produk_ditemukan["Nama Barang"] = input('Masukkan Nama Barang baru: ').strip().title()
+                case 2:
+                    produk_ditemukan["Tipe"] = validasi_input_tipe('Masukkan Tipe baru (Smartphone/Tablet/Laptop): ').strip().title()
+                case 3:
+                    produk_ditemukan["Merek"] = validasi_input_alfabet('Masukkan Merek baru: ').strip().title()
+                case 4:
+                    stock_baru = validasi_input_angka('Masukkan Stock baru: ')
+                    if stock_baru is not None:
+                        produk_ditemukan["Stock"] = int(stock_baru)
+                    else:
+                        update_berhasil = False
+                case 5:
+                    harga_baru = validasi_input_angka('Masukkan Harga baru: ')
+                    if harga_baru is not None:
+                        produk_ditemukan["Harga"] = int(harga_baru)
+                    else:
+                        update_berhasil = False
+                case _:
+                    print("Pilihan tidak valid. Silakan coba lagi.")
+                    update_berhasil = False
 
-        # Tanya apakah ingin menghapus lagi
-        lanjut = input_data("Apakah ingin menghapus barang lain? (ya/tidak): ").strip().lower()
-        if lanjut != 'ya':
-            print("Penghapusan selesai!")
-            break  # Keluar dari loop utama jika pengguna tidak ingin menghapus lagi
+            if update_berhasil:
+                print("Data berhasil diperbarui!")
+
+        if input_data("Apakah ingin mengubah produk lain? (ya/tidak): ").lower() != "ya":
+            print("Keluar dari mode update data.")
+            return
 
 def kembali_data(barang):
-  global data_hapus
-  if not data_hapus:
-    print("Tidak ada data yang dapat dikembalikan.")
-    return
-
-  print("\nData yang dapat dikembalikan:")
-  print(tabulate(data_hapus, headers='keys', tablefmt='simple_grid'))
-
-  while True:
-    id_kembali = validasi_input_angka("Masukkan ID produk yang ingin dikembalikan (0 untuk keluar): ")
-
-    if id_kembali == 0:
-      print("Pengembalian dibatalkan.")
-      return
-
-    # Cari produk berdasarkan ID
-    for item in data_hapus:
-      if item['ID'] == id_kembali:
-        barang.append(item)  # Kembalikan data ke daftar barang
-        data_hapus.remove(item)  # Hapus dari daftar data_hapus
-        print(f"Data dengan ID {id_kembali} berhasil dikembalikan.")
+    global data_hapus
+    if not data_hapus:
+        print("Tidak ada data yang dapat dikembalikan.")
         return
 
-    print("ID tidak ditemukan, silakan coba lagi.")  # Jika ID tidak ada dalam data_hapus
+    while True:
+        print("\nData yang dapat dikembalikan:")
+        print(tabulate(data_hapus, headers='keys', tablefmt='simple_grid'))
+
+        id_kembali = validasi_input_angka("Masukkan ID produk yang ingin dikembalikan (0 untuk keluar): ")
+        if id_kembali is None:  # Handle pembatalan
+            return
+            
+        id_kembali = int(id_kembali)  # Konversi ke integer untuk perbandingan
+
+        for item in data_hapus:
+            if item['ID'] == id_kembali:
+                barang.append(item)
+                data_hapus.remove(item)
+                print(f"Data dengan ID {id_kembali} berhasil dikembalikan.")
+                return
+        print("ID tidak ditemukan, silakan coba lagi.")
 
 def pembelian(barang, akun_login):
-    tampilkan_barang(barang)
     while True:  # Loop utama agar pengguna bisa memilih barang berulang kali
         print("\n=== PEMBELIAN PRODUK ===\n")
 
@@ -301,11 +297,9 @@ def pembelian(barang, akun_login):
             print(f"Saldo tidak mencukupi. Anda kekurangan Rp{total_harga - akun_login['saldo']:,}")
 
         print("\n")
-        beli_lagi = input_data("Apakah Anda ingin menambah barang? (ya/tidak): ").lower()
-        if beli_lagi != 'ya':
-            print(" Pembelian selesai!")
-            break  # Keluar dari loop utama jika pengguna tidak ingin membeli lagi
-
+        # Tanya apakah ingin menghapus lagi
+        if input_data("Apakah Anda ingin menambah barang? (ya/tidak):  ") == "tidak":
+            break  # Keluar dari loop utama jika pengguna memilih "tidak"
 
 def cek_saldo(akun_login):
   print(f"Saldo Anda: Rp{akun_login['saldo']:,}") #menggunakan akun_login karena variabel akun_login ini menyimpan data aktivitas user
@@ -332,61 +326,63 @@ def main():
     print("1. Login")
     print("2. Keluar")
     pilihan = input("Pilih menu (1/2): ")
+    match int(pilihan):
 
-    if pilihan == '1':
-      akun_login = login() #data tersimpan dalam variabel sementara
-      #JIKA YANG LOGIN ADALAH ADMIN
-      while True:
-        if akun_login in admin:
-          print("Selamat datang, admin!")
-          print("\n=== MENU UTAMA ===")
-          print("1. Tampilkan Barang")
-          print("2. Tambah Barang (Admin)")
-          print("3. Ubah Barang (Admin)")
-          print("4. Hapus Barang (Admin)")
-          print("5. Kembalikan Barang yang Dihapus (Admin)")
-          print("6. Keluar")
-          pilihan = input("Pilih menu (1/2/3/4/5/6): ")
-          if pilihan == '1':
-            tampilkan_barang(barang)
-          elif pilihan == '2':
-            menambahkan_data(barang)
-          elif pilihan == '3':
-            mengubah_data(barang)
-          elif pilihan == '4':
-            hapus_data(barang)
-          elif pilihan == '5':
-            kembali_data(barang)
-          elif pilihan == '6':
-            print("Terima kasih! Program selesai.")
-            return
-      #JIKA YANG LOGIN ADALAH USER
-        elif akun_login in user:
-          while True:
-            print(f"SELAMAT DATANG DI TOKO GANTENG GANTENG SELULER, {akun_login['Nama']}")
-            print("\nMenu:")
-            print("1. Beli Barang")
-            print("2. Cek Saldo")
-            print("3. Riwayat Transaksi")
-            print("4. Tambah Saldo")
-            print("5. Keluar")
-            pilihan = input("Pilih menu (1/2/3/4/5): ")
-            if pilihan == '1':
-              pembelian(barang, akun_login)
-            elif pilihan == '2':
-              cek_saldo(akun_login)
-            elif pilihan == '3':
-              tampilkan_transaksi(akun_login)
-            elif pilihan == '4':
-              top_up(akun_login)
-            elif pilihan == '5':
-              print("Keluar")
-              return
-        else:
-            print("Login gagal! Akun tidak ditemukan.")
-
-    elif pilihan == '2':
-      print("Keluar")
-      return
+      case 1 :
+        akun_login = login() #data tersimpan dalam variabel sementara
+        #JIKA YANG LOGIN ADALAH ADMIN
+        while True:
+          if akun_login in admin:
+            print("Selamat datang, admin!")
+            print("\n=== MENU UTAMA ===")
+            print("1. Tampilkan Barang")
+            print("2. Tambah Barang")
+            print("3. Ubah Barang")
+            print("4. Hapus Barang")
+            print("5. Kembalikan Barang yang Dihapus")
+            print("6. Keluar")
+            pilihan = input("Pilih menu (1/2/3/4/5/6): ")
+            match int(pilihan): #match case ini cocok untuk kondisi yang tetap
+              case 1 :
+                tampilkan_barang(barang)
+              case 2 :
+                menambahkan_data(barang)
+              case 3 :
+                mengubah_data(barang)
+              case 4 :
+                hapus_data(barang)
+              case 5 :
+                kembali_data(barang)
+              case 6 :
+                print("Terima kasih! Program selesai.")
+                return
+        #JIKA YANG LOGIN ADALAH USER
+          elif akun_login in user:
+            while True:
+              print(f"SELAMAT DATANG DI TOKO GANTENG GANTENG SELULER, {akun_login['Nama']}")
+              print("\nMenu:")
+              print("1. Beli Barang")
+              print("2. Cek Saldo")
+              print("3. Riwayat Transaksi")
+              print("4. Tambah Saldo")
+              print("5. Keluar")
+              pilihan = input("Pilih menu (1/2/3/4/5): ")
+              match int(pilihan): #match case ini cocok untuk kondisi yang tetap
+                case 1 :
+                  pembelian(barang, akun_login)
+                case 2 :
+                  cek_saldo(akun_login)
+                case 3 :
+                  tampilkan_transaksi(akun_login)
+                case 4 :
+                  top_up(akun_login)
+                case 5 :
+                  print("Keluar")
+                  return
+          else:
+              print("Login gagal! Akun tidak ditemukan.")
+      case 2 :
+        print("Keluar")
+        return
 
 main()

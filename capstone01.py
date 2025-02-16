@@ -1,17 +1,16 @@
 from tabulate import tabulate #import tabulate agar untuk menampilkan tabel
-import regex as re #untuk memvalidasi email pada kode ini
 import random  #untuk menampilkan ID secara random agar uniqe
 from datetime import datetime #untuk mengambil tanggal dan waktu
 
 #membuat data dummy
-user = [
+user = [ #data user yang bisa login untuk melakukan transaksi
     {'Nama':'Jisoo', 'email': 'jisoo@gmail.com', 'password': 'jisoo123', 'saldo':20000000, 'transaksi':[]},
     {'Nama':'Jennie', 'email': 'jennie@gmail.com', 'password': 'jennie123', 'saldo':25000000, 'transaksi':[]},
     {'Nama':'Rose', 'email': 'rose@gmail.com', 'password': 'rose123', 'saldo':150000000, 'transaksi':[]},
     {'Nama':'Lisa', 'email': 'lisa@gmail.com', 'password': 'lisa123', 'saldo':20000000, 'transaksi':[]}
 ]
 
-admin = [
+admin = [#data admin yang dapat melakukan CRUD
     {'Nama':'admin', 'email': 'admin@gmail.com', 'password': 'admin123'}
 ]
 
@@ -26,17 +25,17 @@ barang = [
 ]
 
 data_hapus = [] #untuk menyimpan data yang telah dihapus agar dapat dikembalikan lagi
-existing_ids = {567, 789, 767, 666, 675, 111}  #Untuk menyimpan ID yang sudah digunakan
+ex = {567, 789, 767, 666, 675, 111}  #Untuk menyimpan ID yang sudah digunakan
 
 def random_id():
     """Fungsi untuk menghasilkan ID acak yang unik"""
     while True:  #Loop terus menerus sampai menemukan ID yang unik
-        random.seed(42)
+        random.seed(42) #agar muncul id yang sama setiap kali di run
         new_id = random.randint(100, 999)  # Buat ID acak antara 100-999
-        if new_id not in existing_ids:  # Cek apakah ID sudah ada di existing_ids
+        if new_id not in ex:  # Cek apakah ID sudah ada di existing_ids
             return new_id  #Jika unik, kembalikan ID dan keluar dari loop
 
-# Fungsi untuk validasi variabel2 yang menggunakan huruf
+
 # function validasi input alfabet 
 def validasi_input_alfabet(prompt):
     while True:
@@ -68,16 +67,13 @@ def input_data(prompt):
     while True:
         inputan = input(prompt).strip().lower()
         if inputan in ['ya', 'tidak']:
-            return inputan  # Langsung return tanpa mencetak "Update selesai!"
+            return inputan 
         print('Inputan harus "ya" atau "tidak". Silakan coba lagi.')
 
 def login(): #fungsi login admin dan user
   while True: #perulangan untuk input email dan password agar jika salah akan balik lagi ke input
      email = input('Masukkan Email: ')
      password = input('Masukkan Password: ')
-     if not re.fullmatch(r'\b\w+@\w+.\S*\b', email): #memvalidasi email agar ketika salah bisa kembali ke input, menggunakan regex
-      print('Email tidak valid')
-      continue #melewati kondisi ini, karena kondisinya jika bukan dari validasi email
      for cari_akun in user: #perulangan untuk mencari akun pada data dummy user, disini membuat variabel yang mendefinisikan data user
        if cari_akun['email'] == email and cari_akun['password'] == password: #jika pada data user sudah benar email dan passwordnya maka akan berhasil login
           print(f"\nLogin Berhasil! Selamat datang, {cari_akun['Nama']}")
@@ -330,7 +326,7 @@ def main():
     print("\nMenu:")
     print("1. Login")
     print("2. Keluar")
-    pilihan = input("Pilih menu (1/2): ")
+    pilihan = validasi_input_angka("Pilih menu (1/2): ")
     match int(pilihan):
 
       case 1 :
@@ -346,7 +342,7 @@ def main():
             print("4. Hapus Barang")
             print("5. Kembalikan Barang yang Dihapus")
             print("6. Keluar")
-            pilihan = input("Pilih menu (1/2/3/4/5/6): ")
+            pilihan = validasi_input_angka("Pilih menu (1/2/3/4/5/6): ")
             match int(pilihan): #match case ini cocok untuk kondisi yang tetap
               case 1 :
                 tampilkan_barang(barang)
@@ -371,7 +367,7 @@ def main():
               print("3. Riwayat Transaksi")
               print("4. Tambah Saldo")
               print("5. Keluar")
-              pilihan = input("Pilih menu (1/2/3/4/5): ")
+              pilihan = validasi_input_angka("Pilih menu (1/2/3/4/5): ")
               match int(pilihan): #match case ini cocok untuk kondisi yang tetap
                 case 1 :
                   pembelian(barang, akun_login)

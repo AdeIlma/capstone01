@@ -217,10 +217,15 @@ def kembali_data(barang):
 
         for item in data_hapus:
             if item['ID'] == id_kembali:
+              konfir = input_data("Apakah Anda yakin ingin mengembalikan data ini? (ya/tidak): ")
+              if konfir.lower() == "ya":
                 barang.append(item)
                 data_hapus.remove(item)
                 print(f"Data dengan ID {id_kembali} berhasil dikembalikan.")
                 return
+              else:
+                print("Pengembalian dibatalkan.")
+                return  # Kembali meminta input baru
         print("ID tidak ditemukan, silakan coba lagi.")
 
 def pembelian(barang, akun_login):

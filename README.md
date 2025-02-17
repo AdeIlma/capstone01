@@ -51,7 +51,7 @@ pip install tabulate
 ## 🚀 Cara Menjalankan Program  
 1. Jalankan script Python:  
    ```bash
-   python nama_script.py
+   python capstone01.py
    ```
 2. Masukkan email dan password sesuai dengan akun user atau admin yang tersedia.  
 3. Ikuti petunjuk yang muncul di terminal.  

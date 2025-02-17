@@ -1,51 +1,83 @@
-# 📦 Sistem Manajemen Barang
-Sistem Manajemen Barang adalah aplikasi berbasis CLI (Command Line Interface) yang memungkinkan pengguna untuk mengelola barang, melakukan transaksi, serta login sebagai admin atau user.
-## ✨ Fitur-Fitur
-#### 1. Login & Role Management
-- Sistem login untuk admin dan user
-- Peran admin dapat mengelola barang
-- Peran user hanya bisa membeli barang
-#### 2. Manajemen Barang (Admin)
-- Menampilkan daftar barang dalam tabel
-- Menambahkan barang baru
-- Menghapus barang (soft delete)
-- Mengembalikan barang yang dihapus
-- Mengubah informasi barang
-#### 3. Transaksi (User)
-- Pembelian barang oleh user
-- Saldo user otomatis berkurang saat pembelian
-#### 4. Data Storage Sementara
-- Data barang disimpan dalam list berbasis dictionary
+## 📌 Ganteng Ganteng Seluler - Manajemen Data Barang dan Transaksi  
 
-## 🛠️ Cara Menjalankan
-#### 1. Persiapan
-- Pastikan Python 3.6 ke atas telah terinstal
-- Instal dependensi yang diperlukan dengan perintah berikut:
-  ```
-  !pip install tabulate
+### 📖 Deskripsi  
+Proyek ini merupakan sistem manajemen data barang dan transaksi sederhana menggunakan Python. Program ini memungkinkan pengguna untuk login sebagai **user** atau **admin**, melakukan pembelian, serta mengelola data barang (CRUD).    
 
+## **Fitur Utama**
+- **Login Pengguna dan Admin**:  
+  - Pengguna dapat masuk dengan akun mereka untuk melakukan transaksi.  
+  - Admin memiliki akses untuk mengelola data barang.  
+
+- **Manajemen Barang (CRUD - Create, Read, Update, Delete)**:  
+  - Menampilkan daftar barang yang tersedia dalam bentuk tabel.  
+  - Menambahkan barang baru ke dalam daftar.  
+  - Menghapus barang dari daftar.  
+  - Memperbarui informasi barang.  
+  - Mengembalikan barang yang sebelumnya telah dihapus.  
+
+- **Transaksi Pembelian**:  
+  - Pengguna dapat memilih produk berdasarkan kategori (laptop, smartphone, tablet).  
+  - Sistem akan memverifikasi saldo pengguna sebelum transaksi berhasil.  
+  - Riwayat transaksi akan disimpan di akun pengguna.  
+
+## **Teknologi yang Digunakan**
+- Python 3
+- Library:
+  - `tabulate` → Untuk menampilkan data dalam bentuk tabel  
+  - `random` → Untuk menghasilkan ID unik secara acak  
+  - `datetime` → Untuk mencatat tanggal dan waktu transaksi  
+
+## **Struktur Data**
+- **`user`**: Menyimpan informasi pengguna, termasuk nama, email, password, saldo, dan riwayat transaksi.  
+- **`admin`**: Menyimpan akun admin yang dapat melakukan manajemen barang.  
+- **`barang`**: Menyimpan daftar barang elektronik yang tersedia, termasuk ID, nama, tipe, merek, stok, dan harga.  
+- **`data_hapus`**: Menyimpan data barang yang telah dihapus untuk dapat dikembalikan jika diperlukan.  
+- **`akun_login`**: Menyimpan data pengguna yang sedang login agar dapat digunakan di fitur lain.  
+
+## **Validasi Input**
+Program ini memiliki berbagai fungsi validasi input untuk memastikan bahwa pengguna memasukkan data yang sesuai:
+- **`validasi_input_alfabet()`** → Hanya menerima input berupa huruf.  
+- **`validasi_input_angka()`** → Memastikan input hanya berupa angka.  
+- **`validasi_input_tipe()`** → Memastikan tipe barang hanya dapat berupa `smartphone`, `tablet`, atau `laptop`.  
+
+## 📦 Instalasi  
+Pastikan Anda telah menginstal **Python 3.x** di komputer Anda. Kemudian, instal dependensi yang diperlukan dengan menjalankan:  
+```bash
+pip install tabulate
+```
+
+---
+
+## 🚀 Cara Menjalankan Program  
+1. Jalankan script Python:  
+   ```bash
+   python nama_script.py
    ```
- 
-#### 2. Jalankan Program
-- Jalankan skrip Python:
-  ```
-  python main.py
-  
-  ```
-#### 3. Login sebagai Admin atau User
-- Masukkan username & password yang tersedia di dalam kode
+2. Masukkan email dan password sesuai dengan akun user atau admin yang tersedia.  
+3. Ikuti petunjuk yang muncul di terminal.  
 
-## 📂 Struktur Data
-- Barang disimpan dalam bentuk list berisi dictionary seperti contoh berikut:
-```
-barang = [
-    {'ID': 567, 'Nama Barang': 'Huawei Pura 70 Ultra 16/512GB', 'Tipe': 'Smartphone', 'Merek': 'Huawei', 'Stock':30, 'Harga': 17999000},
-    {'ID': 789, 'Nama Barang': 'Infinix GT20 Pro 8/256GB', 'Tipe': 'Smartphone', 'Merek': 'Infinix', 'Stock':40, 'Harga': 3999000}
-]
-```
-- user dan admin juga disimpan dalam bentuk list seperti contoh atas. 
+---
 
-## 🔑 Catatan Tambahan
-- Validasi Input: Sistem memastikan inputan yang dimasukkan sesuai dengan tipe data yang diharapkan.
-- Soft Delete: Barang yang dihapus tidak benar-benar dihapus, tetapi bisa dikembalikan.
-- Format Tampilan: Menggunakan tabulate agar tampilan lebih rapi.
+## 🛠 Library yang Digunakan  
+| Library   | Fungsi |
+|-----------|--------|
+| `tabulate` | Menampilkan data dalam bentuk tabel |
+| `random`   | Menghasilkan ID unik untuk barang |
+| `datetime` | Mengambil tanggal dan waktu transaksi |
+
+---
+
+## 👥 Akun Default  
+**User**  
+- 📧 `jisoo@gmail.com` | 🔑 `jisoo123` | 💰 `Rp20.000.000`  
+- 📧 `jennie@gmail.com` | 🔑 `jennie123` | 💰 `Rp25.000.000`  
+- 📧 `rose@gmail.com` | 🔑 `rose123` | 💰 `Rp150.000.000`  
+- 📧 `lisa@gmail.com` | 🔑 `lisa123` | 💰 `Rp20.000.000`  
+
+**Admin**  
+- 📧 `admin@gmail.com` | 🔑 `admin123`  
+
+---
+
+## 📜 Lisensi  
+Proyek ini bebas digunakan untuk keperluan pembelajaran dan pengembangan lebih lanjut. 🚀

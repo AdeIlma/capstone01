@@ -23,7 +23,7 @@ Sistem Manajemen Barang adalah aplikasi berbasis CLI (Command Line Interface) ya
 - Instal dependensi yang diperlukan dengan perintah berikut:
   
   `!pip install tabulate`
-  `!pip install regex` 
+ 
 #### 2. Jalankan Program
 - Jalankan skrip Python:
   
